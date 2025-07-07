@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Constelación de Amor para Lolita</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: sans-serif;
+      background: black;
+      position: relative;
+    }
+    #background {
+      position: fixed;
+      top: 50%; left: 50%;
+      width: 180vw;
+      height: 180vh;
+      background: url('galaxy.webp') no-repeat center center;
+      background-size: contain;
+      transform-origin: center center;
+      transform: translate(-50%, -50%) rotate(0deg);
+      animation: rotarGalaxia 600s linear infinite;
+      z-index: 0;
+    }
+    @keyframes rotarGalaxia {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      to {
+        transform: translate(-50%, -50%) rotate(-360deg);
+      }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      z-index: 1;
+      pointer-events: auto;
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+  <div id="background"></div>
+  <canvas id="starsCanvas"></canvas>
+
+  <script>
+    const starsCanvas = document.getElementById("starsCanvas");
+    const starsCtx = starsCanvas.getContext("2d");
+
+    function resizeCanvas() {
+      starsCanvas.width = window.innerWidth;
+      starsCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // Generamos 200 frases personalizadas para Lolita
+    const phrase = [
+"Mi amor, feliz cumpleaños.\nGracias por existir en mi vida.",
+    "Mi amor, hoy celebro tu vida.\nEres mi alegría constante.",
+    "Felicidades, mi amor eterno.\nSiempre a tu lado.",
+    "Mi amor, que este cumpleaños te llene de alegría.\nTe amo con todo mi corazón.",
+    "Mi amor, eres mi regalo más hermoso.\nEres mi sol y mi luna.",
+    "Mi amor, hoy brillas más, feliz cumpleaños.\nTu luz ilumina mi mundo.",
+    "Mi amor, contigo todo es mejor.\nGracias por tu amor infinito.",
+    "Feliz cumpleaños, mi amor, mi mundo.\nCada día contigo es especial.",
+    "Mi amor, celebro cada instante contigo.\nEres mi todo.",
+    "Mi amor, que tus sueños se hagan realidad.\nMereces lo mejor siempre.",
+    "Mi amor, eres mi alegría constante.\nTe amo más cada día.",
+    "Mi amor, feliz cumpleaños a mi reina.\nEres la reina de mi corazón.",
+    "Mi amor, gracias por existir.\nEres mi mejor regalo.",
+    "Mi amor, que este día te abrace.\nCon amor y dulzura.",
+    "Mi amor, contigo la vida es dulce.\nEres mi paz.",
+    "Mi amor, celebro tu vida hermosa.\nSiempre estaré para ti.",
+    "Mi amor, feliz día, mi inspiración.\nNunca dejes de soñar.",
+    "Mi amor, que la felicidad te siga.\nTe lo mereces todo.",
+    "Mi amor, te adoro cada día más.\nEres mi fuerza.",
+    "Mi amor, eres mi luz, feliz cumpleaños.\nGracias por brillar.",
+    "Mi amor, eres mi tesoro.\nInvaluable y eterno.",
+    "Mi amor, tu vida me llena de felicidad.\nEres mi felicidad.",
+    "Mi amor, contigo todo es alegría.\nSiempre quiero estar contigo.",
+    "Mi amor, en tu cumpleaños, deseo mucha felicidad.\nY mucho amor.",
+    "Mi amor, gracias por ser mi compañera.\nTe amo con el alma.",
+    "Mi amor, cada día contigo es un sueño hecho realidad.\nNunca despiertes.",
+    "Mi amor, te amo más que las estrellas.\nContigo hasta el infinito.",
+    "Mi amor, eres mi sol favorito.\nSiempre iluminas mi vida.",
+    "Mi amor, feliz cumpleaños y todo lo mejor.\nDisfruta tu día.",
+    "Mi amor, en este día especial, eres mi reina.\nTe celebro hoy y siempre.",
+    "Mi amor, eres mi alegría.\nEres mi corazón.",
+    "Mi amor, tu corazón me llena de felicidad.\nGracias por tu ternura.",
+    "Mi amor, contigo todo es paz.\nEres mi equilibrio.",
+    "Mi amor, en tu cumpleaños, deseo amor sin fin.\nTe lo entrego todo.",
+    "Mi amor, gracias por ser mi alma gemela.\nSomos uno solo.",
+    "Mi amor, cada día contigo es magia.\nNunca pierdas ese brillo.",
+    "Mi amor, te amo más que el universo.\nSiempre serás mi galaxia.",
+    "Mi amor, eres mi estrella favorita.\nLa más brillante.",
+    "Mi amor, feliz cumpleaños y felicidad eterna.\nTe deseo lo mejor.",
+    "Mi amor, en este día especial, eres mi luz.\nGracias por iluminarme.",
+    "Mi amor, eres mi bendición.\nSiempre agradezco por ti.",
+    "Mi amor, tu sonrisa me llena de felicidad.\nNo dejes de sonreír.",
+    "Mi amor, contigo todo es amor infinito.\nIncontable e inmenso.",
+    "Mi amor, en tu cumpleaños, deseo éxito y salud.\nY amor del bueno.",
+    "Mi amor, gracias por ser mi sol.\nMi energía.",
+    "Mi amor, cada día contigo es paz.\nY alegría.",
+    "Mi amor, te amo más que los días soleados.\nEres mi cielo.",
+    "Mi amor, eres mi estrella brillante.\nNunca dejes de brillar.",
+    "Mi amor, feliz cumpleaños y momentos inolvidables.\nVamos a crearlos.",
+    "Mi amor, en este día especial, eres mi inspiración.\nSiempre lo serás.",
+    "Mi amor, eres mi alegría constante.\nGracias por tu amor.",
+    "Mi amor, tu amor me llena el alma.\nMe hace completo.",
+    "Mi amor, contigo todo es hermoso.\nTú haces la diferencia.",
+    "Mi amor, en tu cumpleaños, deseo alegría y amor.\nTodo lo mejor para ti.",
+    "Mi amor, gracias por ser mi luz.\nGuíame siempre.",
+    "Mi amor, cada instante contigo es felicidad.\nNo quiero otro destino.",
+    "Mi amor, te amo más que el mar infinito.\nY aún más.",
+    "Mi amor, eres mi sol en días nublados.\nGracias por iluminar.",
+    "Mi amor, feliz cumpleaños y bendiciones.\nCon todo mi amor.",
+    "Mi amor, en este día especial, eres mi corazón.\nY siempre lo serás.",
+    "Mi amor, eres mi alegría eterna.\nMi amor sin fin.",
+    "Mi amor, tu risa es mi melodía favorita.\nNo dejes de reír.",
+    "Mi amor, contigo todo es perfecto.\nNo cambiaría nada.",
+    "Mi amor, en tu cumpleaños, deseo sueños cumplidos.\nY días felices.",
+    "Mi amor, gracias por ser mi paz.\nMi tranquilidad.",
+    "Mi amor, cada día contigo es un regalo.\nEl mejor de todos.",
+    "Mi amor, te amo más que las olas del mar.\nY cada vez más.",
+    "Mi amor, eres mi estrella que guía mi camino.\nMi brújula.",
+    "Mi amor, feliz cumpleaños y amor sin fin.\nDe mí para ti.",
+    "Mi amor, en este día especial, eres mi todo.\nNo necesito más.",
+    "Mi amor, eres mi alegría y mi vida.\nLo eres todo.",
+    "Mi amor, tu abrazo es mi refugio.\nDonde quiero estar.",
+    "Mi amor, contigo todo es amor verdadero.\nAuténtico y sincero.",
+    "Mi amor, en tu cumpleaños, deseo felicidad sin límites.\nY siempre contigo.",
+    "Mi amor, gracias por ser mi compañera de vida.\nPor compartirlo todo.",
+    "Mi amor, cada momento contigo es un sueño.\nNo quiero despertar.",
+    "Mi amor, te amo más que la luna brillante.\nY más allá.",
+    "Mi amor, eres mi luz en la oscuridad.\nSiempre iluminas mi camino.",
+    "Mi amor, feliz cumpleaños y éxito en todo.\nEstoy contigo siempre.",
+    "Mi amor, en este día especial, eres mi inspiración constante.\nMi musa.",
+    "Mi amor, eres mi alegría sin medida.\nInmensa y real.",
+    "Mi amor, tu mirada es mi paz.\nMi lugar seguro.",
+    "Mi amor, contigo todo es mágico.\nComo un cuento.",
+    "Mi amor, en tu cumpleaños, deseo salud y amor eterno.\nSiempre juntos.",
+    "Mi amor, gracias por ser mi sol radiante.\nMi claridad.",
+    "Mi amor, cada día contigo es un milagro.\nUna bendición.",
+    "Mi amor, te amo más que las estrellas del cielo.\nMás de lo imaginable.",
+    "Mi amor, eres mi alegría y mi fuerza.\nMi apoyo constante.",
+    "Mi amor, feliz cumpleaños y que se cumplan tus sueños.\nTe amo infinitamente."
+    ];
+
+    const messages = [];
+while (messages.length < 200) {
+  for (const p of phrase) {
+    if (messages.length >= 200) break;
+    messages.push(p);
+  }
+}
+
+    // Creamos 150 estrellas
+    const stars = [];
+    for (let i = 0; i < 150; i++) {
+      stars.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 2.5 + 1.5,
+        twinkle: Math.random() * 100,
+        msgIndices: [], // índices para mensajes asignados a esta estrella
+        msgPointer: 0,  // para recorrer los mensajes sin repetir
+        showMsg: false
+      });
+    }
+
+    // Asignar a cada estrella 3 mensajes distintos de forma aleatoria sin repetir
+    for (const star of stars) {
+      while (star.msgIndices.length < 3) {
+        const idx = Math.floor(Math.random() * messages.length);
+        if (!star.msgIndices.includes(idx)) {
+          star.msgIndices.push(idx);
+        }
+      }
+    }
+
+    starsCanvas.addEventListener("click", function (e) {
+      const rect = starsCanvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      let clickedStarIndex = -1;
+      for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
+        const dx = mx - star.x;
+        const dy = my - star.y;
+        if (Math.sqrt(dx * dx + dy * dy) < 10) {
+          clickedStarIndex = i;
+          break;
+        }
+      }
+
+      if (clickedStarIndex === -1) {
+        stars.forEach(star => star.showMsg = false);
+      } else {
+        stars.forEach((star, i) => {
+          if (i === clickedStarIndex) {
+            star.showMsg = !star.showMsg;
+            if (star.showMsg) {
+              // Avanzar el puntero para mostrar un mensaje diferente
+              star.msgPointer = (star.msgPointer + 1) % star.msgIndices.length;
+            }
+          } else {
+            star.showMsg = false;
+          }
+        });
+      }
+    });
+
+    const particles = [];
+    for (let i = 0; i < 30; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 3 + 2,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        color: `rgba(${200 + Math.random()*55}, ${30}, ${70 + Math.random()*100}, 0.6)`
+      });
+    }
+
+    class ShootingStar {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight * 0.5;
+        this.len = 100 + Math.random() * 100;
+        this.speed = 10 + Math.random() * 10;
+        this.angle = Math.PI / 4;
+        this.life = 0;
+        this.maxLife = 100;
+      }
+      update() {
+        this.x += this.speed * Math.cos(this.angle);
+        this.y += this.speed * Math.sin(this.angle);
+        this.life++;
+        if (this.life > this.maxLife || this.x > window.innerWidth || this.y > window.innerHeight) {
+          this.reset();
+        }
+      }
+      draw(ctx) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+        ctx.lineWidth = 2;
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x - this.len * Math.cos(this.angle), this.y - this.len * Math.sin(this.angle));
+        ctx.stroke();
+      }
+    }
+    const shootingStars = [];
+    for (let i = 0; i < 5; i++) {
+      shootingStars.push(new ShootingStar());
+    }
+
+    function drawStars() {
+      for (const star of stars) {
+        starsCtx.beginPath();
+        starsCtx.arc(star.x, star.y, star.r * 2, 0, Math.PI * 2);
+        starsCtx.shadowColor = 'rgba(255, 182, 193, 0.9)';
+        starsCtx.shadowBlur = 10;
+        starsCtx.fillStyle = `rgba(255, 182, 193, ${0.7 + Math.sin(star.twinkle / 10) * 0.3})`;
+        starsCtx.fill();
+        starsCtx.shadowBlur = 0;
+        star.twinkle += 1;
+
+        if (star.showMsg) {
+          starsCtx.font = "italic 28px serif";
+          starsCtx.fillStyle = "#FFFFFF";
+          starsCtx.textAlign = "center";
+
+          const msgIndex = star.msgIndices[star.msgPointer];
+          const message = messages[msgIndex];
+          const lines = message.split('\n');
+          const lineHeight = 34;
+          lines.forEach((line, index) => {
+            starsCtx.fillText(line, star.x, star.y - 30 - (lineHeight * index));
+          });
+        }
+      }
+    }
+
+    function drawParticles() {
+      for (const p of particles) {
+        starsCtx.beginPath();
+        starsCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        starsCtx.fillStyle = p.color;
+        starsCtx.fill();
+
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if (p.x < 0 || p.x > window.innerWidth) p.speedX *= -1;
+        if (p.y < 0 || p.y > window.innerHeight) p.speedY *= -1;
+      }
+    }
+
+    function drawShootingStars() {
+      for (const s of shootingStars) {
+        s.update();
+        s.draw(starsCtx);
+      }
+    }
+
+    function animate() {
+      starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+
+      drawStars();
+      drawParticles();
+      drawShootingStars();
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
